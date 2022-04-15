@@ -23,4 +23,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Category\" />
+  </ItemGroup>
+
 </Project>
