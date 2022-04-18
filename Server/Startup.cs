@@ -1,5 +1,7 @@
 using ElevenNoteWebApp.Server.Data;
 using ElevenNoteWebApp.Server.Models;
+using ElevenNoteWebApp.Server.Services.CategoryService;
+using ElevenNoteWebApp.Server.Services.NoteService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +31,9 @@ namespace ElevenNoteWebApp.Server
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<INoteService, NoteService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
