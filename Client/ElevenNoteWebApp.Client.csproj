@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Shared\ElevenNoteWebApp.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Notes\" />
-  </ItemGroup>
-
 </Project>
