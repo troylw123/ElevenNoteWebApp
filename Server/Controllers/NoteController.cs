@@ -11,11 +11,11 @@ namespace ElevenNoteWebApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class NotesController : ControllerBase
+    public class NoteController : ControllerBase
     {
         private readonly INoteService _noteService;
 
-        public NotesController(INoteService noteService)
+        public NoteController(INoteService noteService)
         {
             _noteService = noteService;
         }

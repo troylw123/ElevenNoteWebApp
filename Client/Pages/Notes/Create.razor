@@ -59,7 +59,7 @@ else
 
     private async void HandleSubmit()
     {
-        var createRes = await http.PostAsJsonAsync<NoteCreate>("/api/notes", model);
+        var createRes = await http.PostAsJsonAsync<NoteCreate>("/api/note", model);
         if(createRes.IsSuccessStatusCode)
         {
             navigation.NavigateTo("/note");

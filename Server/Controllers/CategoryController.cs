@@ -44,10 +44,12 @@ namespace ElevenNoteWebApp.Server.Controllers
             return UnprocessableEntity();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(CategoryEdit model)
+        [HttpPut("edit/{id}")]
+        public async Task<IActionResult> Update(int id, CategoryEdit model)
         {
             if (model == null || !ModelState.IsValid) return BadRequest();
+
+            if (model.Id != id) return BadRequest();
 
             bool wasSuccessful = await _categoryService.UpdateCategoryAsync(model);
 
@@ -55,7 +57,7 @@ namespace ElevenNoteWebApp.Server.Controllers
             return UnprocessableEntity();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var category = await _categoryService.GetCategoryByIdAsync(id);

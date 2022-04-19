@@ -1,0 +1,60 @@
+﻿@page "/category/edit/{CategoryId:int}"
+@using Microsoft.AspNetCore.Authorization
+@using ElevenNoteWebApp.Shared.Models.Category
+
+@attribute [Authorize]
+
+@inject HttpClient http
+@inject NavigationManager navigation
+
+<h3>Edit Category</h3>
+
+@if (errorMessage != null)
+{
+    <h5 class="text-danger">@errorMessage</h5>
+
+}
+@if (Model == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+<div class="container">
+    <EditForm Model="@Model" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary  />
+        <div class="form-group">
+            <label>Name</label>
+            <InputText class="form-control" @bind-Value="Model.Name" />
+            <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+        </div>
+    </EditForm>
+</div>
+}
+
+@code {
+    [Parameter]
+    public int CategoryId { get; set; }
+    private CategoryEdit Model { get; set; }
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await http.GetFromJsonAsync<CategoryEdit>($"/api/category/{CategoryId}");
+    }
+
+    private async void HandleSubmit()
+    {
+        var createRes = await http.PutAsJsonAsync<CategoryEdit>($"/api/category/edit/{CategoryId}", Model);
+        if (createRes.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/category");
+        }
+        else
+        {
+            errorMessage = "Could not update your category right now. Please try again later.";
+            
+        }
+    }
+}

@@ -21,6 +21,7 @@ else
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +30,10 @@ else
                 <tr>
                     <td>@category.Id</td>
                     <td>@category.Name</td>
+                    <td>
+                    <a href=@($"category/edit/{category.Id}")>Edit |</a>
+                    <a href=@($"category/delete/{category.Id}")>Delete</a>
+                    </td>
                 </tr>
             }
         </tbody>

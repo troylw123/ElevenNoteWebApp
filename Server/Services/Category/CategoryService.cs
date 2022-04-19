@@ -67,11 +67,9 @@ namespace ElevenNoteWebApp.Server.Services.CategoryService
         {
             if (model == null) return false;
 
-            var category = await _context.Categories.FindAsync(model.Name);
+            var category = await _context.Categories.FindAsync(model.Id);
 
-            if (category == null) return false;
-
-            model.Name = category.Name;
+            category.Name = model.Name;
 
             return await _context.SaveChangesAsync() == 1;
 

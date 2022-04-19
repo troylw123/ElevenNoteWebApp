@@ -46,6 +46,6 @@ else
     public NoteDetail Note { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Note = await http.GetFromJsonAsync<NoteDetail>($"/api/notes/{NoteId}");
+        Note = await http.GetFromJsonAsync<NoteDetail>($"/api/note/{NoteId}");
     }
 }

@@ -1,71 +1,76 @@
 ﻿@page "/note/edit/{NoteId:int}"
-@using ElevenNoteWebApp.Shared.Models.Category
 @using ElevenNoteWebApp.Shared.Models.Note
+@using ElevenNoteWebApp.Shared.Models.Category
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 @inject HttpClient http
 @inject NavigationManager navigation
 
-<h3>Edit Note @Model.Title</h3>
-@if (Note != null)
+<h3>Edit Note</h3>
+
+@if (errorMessage != null)
 {
-    <div class="container">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between">
-                <span>Note #@Note.Id</span>
-                <span class="text-muted"><strong>@Note.CategoryName</strong></span>
-            </div>
-            <div class="card-body">
-                <h4 class="card-title">@Note.Title</h4>
-                <p class="card-text">@Note.Content</p>
-            </div>
-            <div class="card-footer text-muted d-flex justify-content-between">
-                <span class="text-left">Created: @Note.CreatedUtc</span>
-                @if (Note.ModifiedUtc != null)
-                {
-                    <span class="text-right">Modified: @Note.ModifiedUtc</span>
-                }
-            </div>
-        </div>
-        <div class="d-flex justify-content-center mt-3">
-            <div class="text-center justify-content-between w-25">
-                <a href=@($"/note/edit/{NoteId}") class="btn btn-outline-primary">Edit |</a>
-                <a href=@($"/note/delete/{NoteId}") class="btn btn-outline-danger">Delete</a>
-                <hr />
-                <a href="/note">Back to Notes</a>
-            </div>
-        </div>
-    </div>
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+@if (Categories == null)
+{
+    <p><em>Loading...</em></p>
 }
 else
 {
-    <p><em>Loading...</em></p>
+<div class="container">
+    <EditForm Model="@Model" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label>Title</label>
+            <InputText class="form-control" @bind-Value="Model.Title" />
+        </div>
+        <div class="form-group">
+            <label>Content</label>
+            <InputTextArea class="form-control" @bind-Value="Model.Content" />
+            </div>
+        <div class="form-group">
+            <label>Category</label>
+            <InputSelect class="form-control" @bind-Value="Model.CategoryId">
+                @foreach (var category in Categories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </InputSelect>
+        </div>
+            <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+
+        
+    </EditForm>
+</div>
 }
 
 @code {
     [Parameter]
     public int NoteId { get; set; }
-    public NoteDetail Note { get; set; }
     private NoteEdit Model { get; set; }
     private IEnumerable<CategoryListItem> Categories { get; set; }
-    private string ErrorMessage { get; set; }
+    private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        Model = await http.GetFromJsonAsync<NoteEdit>($"/api/notes/{NoteId}");
+        Model = await http.GetFromJsonAsync<NoteEdit>($"/api/note/{NoteId}");
         Categories = await http.GetFromJsonAsync<IEnumerable<CategoryListItem>>("/api/category");
     }
 
     private async void HandleSubmit()
     {
         var createRes = await http.PutAsJsonAsync<NoteEdit>($"/api/note/edit/{NoteId}", Model);
-        if (createRes.IsSuccessStatusCode)
+        if(createRes.IsSuccessStatusCode)
         {
             navigation.NavigateTo($"/note/{NoteId}");
+
         }
         else
         {
-            ErrorMessage = "Could not create your note right now. Please try again later.";
+            errorMessage = "Could not create your note right now. Please try again later.";
         }
     }
 }

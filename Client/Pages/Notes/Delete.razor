@@ -5,7 +5,7 @@
 @inject HttpClient http
 @inject NavigationManager navigation
 
-<h3>Delete Note #@NoteId</h3>
+<h3>Delete Note</h3>
 
 @if (Message != null)
 {
@@ -34,8 +34,8 @@
         </div>
         <div class="d-flex justify-content-center mt-3">
             <div class="text-center justify-content-between w-50">
-                <a href=@($"/note/edit/{NoteId}") class="btn btn-outline-primary">Back to Notes</a>
-                <a href="#" @onlcick="HandleClick" class="btn btn-danger text-white">Delete Note!</a>
+                <a href=@($"/note/edit/{NoteId}") class="btn btn-outline-primary">Edit Note Instead</a>
+                <a href="#" @onclick="HandleClick" class="btn btn-danger text-white">Delete Note!</a>
             </div>
         </div>
     </div>
@@ -53,13 +53,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Note = await http.GetFromJsonAsync<NoteDetail>($"/api/notes/{NoteId}");
+        Note = await http.GetFromJsonAsync<NoteDetail>($"/api/note/{NoteId}");
     }
 
     private async void HandleClick()
     {
         // call a delete request on our API
-        var deleteRes = await http.DeleteAsync($"/api/notes/{NoteId}");
+        var deleteRes = await http.DeleteAsync($"/api/note/{NoteId}");
 
         // check to make sure the call was a success
         // if successful, navigate back to the Index.razor component
